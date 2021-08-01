@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "f1a09eff-1519-40ad-b89a-0cb7eddf5583",
+		"name": "ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Smart TV Samsung 4K\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Smart TV Samsung 4K\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products/6c82258b-f8d7-4b56-8f77-2afa513778a3",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"6c82258b-f8d7-4b56-8f77-2afa513778a3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sku\": \"6c82258b-f8d7-4b56-8f77-2afa513778a3\",\r\n    \"name\": \"Smart TV Samsung 5K\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ecommerce}}/v1/products/6c82258b-f8d7-4b56-8f77-2afa513778a3",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"6c82258b-f8d7-4b56-8f77-2afa513778a3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "integrated tests",
+			"item": [
+				{
+					"name": "Should be able to create a new product.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status = 200\", () => pm.response.to.have.status(200))\r",
+									"pm.test(\"Time < 900 ms\", () => pm.expect(pm.response.responseTime).to.be.below(900))\r",
+									"pm.test(\"Content-Type = application/json\", () => pm.response.to.be.header(\"Content-Type\", \"application/json\"))\r",
+									"pm.test(\"Body is valid\", () => pm.expect(pm.response.text()).to.include(`\"name\":\"${pm.variables.get(\"product.name\")}\",\"price\":${pm.variables.get(\"product.price\")}`))\r",
+									"\r",
+									"pm.collectionVariables.set(\"product.sku\", JSON.parse(responseBody).sku)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{product.name}}\",\r\n    \"price\": {{product.price}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should be able to find a product.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status = 200\", () => pm.response.to.have.status(200))\r",
+									"pm.test(\"Time < 900 ms\", () => pm.expect(pm.response.responseTime).to.be.below(900))\r",
+									"pm.test(\"Content-Type = application/json\", () => pm.response.to.be.header(\"Content-Type\", \"application/json\"))\r",
+									"pm.test(\"Body is valid\", () => pm.expect(pm.response.text()).to.include(`{\"sku\":\"${pm.variables.get(\"product.sku\")}\",\"name\":\"${pm.variables.get(\"product.name\")}\",\"price\":${pm.variables.get(\"product.price\")}}`))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Smart TV Samsung 4K\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products/{{product.sku}}",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{product.sku}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should be able to report that the product was not found.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status = 204\", () => pm.response.to.have.status(204))\r",
+									"pm.test(\"Time < 900 ms\", () => pm.expect(pm.response.responseTime).to.be.below(900))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Smart TV Samsung 4K\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products/{{$randomUUID}}",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{$randomUUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should be able to update a product.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status = 200\", () => pm.response.to.have.status(200))\r",
+									"pm.test(\"Time < 900 ms\", () => pm.expect(pm.response.responseTime).to.be.below(900))\r",
+									"pm.test(\"Content-Type = application/json\", () => pm.response.to.be.header(\"Content-Type\", \"application/json\"))\r",
+									"pm.test(\"Body is valid\", () => pm.expect(pm.response.text()).to.include(`{\"sku\":\"${pm.variables.get(\"product.sku\")}\",\"name\":\"${pm.variables.get(\"product.name\")}\",\"price\":${pm.variables.get(\"product.price\")}}`))"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"product.name\", \"Smart TV Samsung 5K\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sku\": \"{{product.sku}}\",\r\n    \"name\": \"{{product.name}}\",\r\n    \"price\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ecommerce}}/v1/products",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should be able to delete a product.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status = 200\", () => pm.response.to.have.status(200))\r",
+									"pm.test(\"Time < 900 ms\", () => pm.expect(pm.response.responseTime).to.be.below(900))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ecommerce}}/v1/products/{{product.sku}}",
+							"host": [
+								"{{ecommerce}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{product.sku}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.variables.set(\"product.name\", \"Smart TV Samsung 4K\")",
+							"pm.variables.set(\"product.price\", \"3000\")"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "product.id",
+			"value": ""
+		},
+		{
+			"key": "product.sku",
+			"value": ""
+		}
+	]
+}
